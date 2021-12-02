@@ -80,182 +80,34 @@ void function_a( Matriu& sudoku ){
   vector <int> posibles_fc; vector <int> posibles_q; vector <int>  posibles;
 
   cin >> fila >> cl;
-  
-  if ( cl == 'A' ){
-    columna = 0;
-    fila -= 1;
-
-    if (sudoku[fila][columna] == 0){
-      for (int i = 1; i <= 9; ++i){
-        //INV:
-        if (correcte_quadrant(sudoku,fila,columna,i)){
-          posibles_q.push_back(i);
-        }
-        if (correcte_fila_columna(sudoku,fila,columna,i)){
-          posibles_fc.push_back(i);
-        }
-      }
-
-    }else if (sudoku[fila][columna] != 0){
-      cout << "[]" << endl;
-    }
-  }else if ( cl == 'B' ){
-    columna = 1;
-    fila -= 1;
-    
-    if (sudoku[fila][columna] == 0){
-      for (int i = 1; i <= 9; ++i){
-        //INV:
-        if (correcte_quadrant(sudoku,fila,columna,i)){
-          posibles_q.push_back(i);
-        }
-        if (correcte_fila_columna(sudoku,fila,columna,i)){
-          posibles_fc.push_back(i);
-        }
-      }
-    }else if (sudoku[fila][columna] != 0){
-      cout << "[]" << endl;
-    }
-
-  }else if ( cl == 'C' ){
-    columna = 2;
-    fila -= 1;
-    
-    if (sudoku[fila][columna] == 0){
-      for (int i = 1; i <= 9; ++i){
-        //INV:
-        if (correcte_quadrant(sudoku,fila,columna,i)){
-          posibles_q.push_back(i);
-        }
-        if (correcte_fila_columna(sudoku,fila,columna,i)){
-          posibles_fc.push_back(i);
-        }
-      }
-    }else if (sudoku[fila][columna] != 0){
-      cout << "[]" << endl;
-    }
-
-  }else if ( cl == 'D' ){
-    columna = 3;
-    fila -= 1;
-    
-    if (sudoku[fila][columna] == 0){
-      for (int i = 1; i <= 9; ++i){
-        //INV:
-        if (correcte_quadrant(sudoku,fila,columna,i)){
-          posibles_q.push_back(i);
-        }
-        if (correcte_fila_columna(sudoku,fila,columna,i)){
-          posibles_fc.push_back(i);
-        }
-      }
-    }else if (sudoku[fila][columna] != 0){
-      cout << "[]" << endl;
-    }
-
-  }else if ( cl == 'E' ){
-    columna = 4;
-    fila -= 1;
-    
-    if (sudoku[fila][columna] == 0){
-      for (int i = 1; i <= 9; ++i){
-        //INV:
-        if (correcte_quadrant(sudoku,fila,columna,i)){
-          posibles_q.push_back(i);
-        }
-        if (correcte_fila_columna(sudoku,fila,columna,i)){
-          posibles_fc.push_back(i);
-        }
-      }
-    }else if (sudoku[fila][columna] != 0){
-      cout << "[]" << endl;
-    }
-
-  }else if ( cl == 'F' ){
-    columna = 5;
-    fila -= 1;
-    
-    if (sudoku[fila][columna] == 0){
-      for (int i = 1; i <= 9; ++i){
-        //INV:
-        if (correcte_quadrant(sudoku,fila,columna,i)){
-          posibles_q.push_back(i);
-        }
-        if (correcte_fila_columna(sudoku,fila,columna,i)){
-          posibles_fc.push_back(i);
-        }
-      }
-    }else if (sudoku[fila][columna] != 0){
-      cout << "[]" << endl;
-    }
-
-  }else if ( cl == 'G' ){
-    columna = 6;
-    fila -= 1;  
-    
-    if (sudoku[fila][columna] == 0){
-      for (int i = 1; i <= 9; ++i){
-        //INV:
-        if (correcte_quadrant(sudoku,fila,columna,i)){
-          posibles_q.push_back(i);
-        }
-        if (correcte_fila_columna(sudoku,fila,columna,i)){
-          posibles_fc.push_back(i);
-        }
-      }
-    }else if (sudoku[fila][columna] != 0){
-      cout << "[]" << endl;
-    }
-
-  }else if ( cl == 'H' ){
-    columna = 7;
-    fila -= 1;
-    
-    if (sudoku[fila][columna] == 0){
-      for (int i = 1; i <= 9; ++i){
-        //INV:
-        if (correcte_quadrant(sudoku,fila,columna,i)){
-          posibles_q.push_back(i);
-        }
-        if (correcte_fila_columna(sudoku,fila,columna,i)){
-          posibles_fc.push_back(i);
-        }
-      }
-    }else if (sudoku[fila][columna] != 0){
-      cout << "[]" << endl;
-    }
-
-  }else if ( cl == 'I' ){
-    columna = 8;
-    fila -= 1;
-    
-    if (sudoku[fila][columna] == 0){
-      for (int i = 1; i <= 9; ++i){
-        //INV:
-        if (correcte_quadrant(sudoku,fila,columna,i)){
-          //if (correcte_fila_columna(sudoku,fila,columna,i)){
-          posibles_q.push_back(i);
-          //}
-        }
-        if (correcte_fila_columna(sudoku,fila,columna,i)){
-          posibles_fc.push_back(i);
-        }
-      }
-    }else if (sudoku[fila][columna] != 0){
-      cout << "[]" << endl;
-    }
-
-  }
+  fila -= 1;
+  columna = cl - 'A';
   int val;
+  if (sudoku[fila][columna] == 0){
+    for (int i = 1; i <= 9; ++i){
+     //INV:
+     if (correcte_quadrant(sudoku,fila,columna,i)){
+       //if (correcte_fila_columna(sudoku,fila,columna,i)){
+       posibles_q.push_back(i);
+       //}
+     }
+     if (correcte_fila_columna(sudoku,fila,columna,i)){
+       posibles_fc.push_back(i);
+     }
+    }
+   }else if (sudoku[fila][columna] != 0){
+      cout << "[]" << endl;
+   }
+
   for (int i = 0; i < int(posibles_fc.size()); ++i){
     //INV:
-      for (int j = 0; j < int(posibles_q.size()); ++j){
+    for (int j = 0; j < int(posibles_q.size()); ++j){
         //INV:
         if (posibles_fc[i] == posibles_q[j]){ 
-          val = posibles_q[j];
-          posibles.push_back(val);
+         val = posibles_q[j];
+         posibles.push_back(val);
         }
-      }
+     }
   }
   
   int tamany = posibles.size();
@@ -287,39 +139,7 @@ void function_b( Matriu& sudoku ){
  vector <int> posible_q; vector <int> posible_fc; vector <int> posible;
  
  fila = fila - 1;
-
- if (col == 'A'){
-  columna = 0;
-
- }else if (col == 'B'){
-  columna = 1;
-
- }else if (col == 'C'){
-  columna = 2;
-
- }else if (col == 'D'){
-  columna = 3;
-
- }else if (col == 'E'){
-  columna = 4;
-
- }else if (col == 'F'){
-  columna = 5;
-
- }else if (col == 'G'){
-  columna = 6;
-
- }else if (col == 'H'){
-  columna = 7;
-
- }else if (col == 'I'){
-  columna = 8;
-
- }else {
-    cout << " Columna no correcte, torneu a introduir els valors per a aquesta casella " << endl;
-    function_b(sudoku);
- }
-
+ columna = col - 'A';
 
   for (int i = 1; i <= 9; ++i){
     //INV:
@@ -417,7 +237,7 @@ void function_c( Matriu& sudoku ){
 //POST: Retorna quin valor ha d'anar a cada casella així com el sudoku resolt.
 void function_r( Matriu& sudoku){
  Matriu back = sudoku;
- 
+  
 }
 //MAIN
 int main(){
@@ -425,8 +245,10 @@ int main(){
   
   //OMPLIM LA MATRIU
   for (int i = 0; i < 9; ++i) {
+    //INV:
     for (int j = 0; j < 9; ++j) {
-      cin >> sudoku[i][j];
+       //INV:
+       cin >> sudoku[i][j];
     }
   }
   
