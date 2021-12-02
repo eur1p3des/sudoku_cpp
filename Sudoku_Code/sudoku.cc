@@ -70,7 +70,23 @@ bool correcte_quadrant( Matriu& sudoku, int fila, int columna, int valor ){
   
 }
 
+//DESC: Funció que retorna si s'ha trobat o no un valor específic
+//PRE:
+//POST:
+bool includes(const vector<int>& valors, int valor){
+  bool trobat = false;
+  int iterador = 0;
+  while (!trobat and iterador < int(valors.size())){
+    if (valors[iterador] == valor){ trobat = true; }
+    ++iterador;
+  }
+  return trobat;
+}
 
+
+//DESC:
+//PRE:
+//POST
 vector <int> getPossibleValues(Matriu& sudoku, int fila, int columna){
   vector <int> posible_q;
   vector <int> posible_fc;
@@ -99,8 +115,40 @@ vector <int> getPossibleValues(Matriu& sudoku, int fila, int columna){
  
 }
 
+
+//DESC:
+//PRE:
+//POST:
 bool unicValor(Matriu& sudoku, int fila, int columna, int valor){
-  return true;
+  bool mandatory = true;
+  int iterator = 0;
+
+  while (mandatory and iterator < 9){
+    //INV:
+    
+    if (columna != iterator and includes(getPossibleValues(sudoku, fila, iterator), valor)){
+        mandatory = false;
+    }
+    if (fila != iterator and includes(getPossibleValues(sudoku, iterator, columna), valor)){
+        mandatory = false;
+    }
+    ++iterator;
+  }
+
+  vector <int> submatriu = {
+    fila/3,
+    columna/3
+  };
+  
+  for (int i = 0; i < 3 and mandatory; ++i){
+    for (int j = 0; j < 3 and mandatory; ++j){
+      if ( i != fila and j != columna and includes(getPossibleValues(sudoku,i,j), valor)){
+        mandatory = false;
+      }
+    }
+  }
+
+  return mandatory;
 }
 
 
