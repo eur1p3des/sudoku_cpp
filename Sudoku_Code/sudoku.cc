@@ -152,18 +152,13 @@ bool unicValor(Matriu& sudoku, int fila, int columna, int valor){
 }
 
 
-
-
-
-
 //DESC: funció que quan main rep el parametre A retorna els posibles valors per  a una casella determinada.
 //PRE:
 //POST:
 void function_a( Matriu& sudoku ){
   int fila, columna;
   char cl;
-  vector <int> posibles_fc; vector <int> posibles_q; vector <int>  posibles;
-
+  vector <int> posibles;
   cin >> fila >> cl;
    
   cout << fila << cl << ": ";
@@ -171,34 +166,12 @@ void function_a( Matriu& sudoku ){
   // Asignem els valors correctes per a la fila i la columna.
   fila -= 1;
   columna = cl - 'A';
-  int val;
-  
+
   if (sudoku[fila][columna] == 0){
-    for (int i = 1; i <= 9; ++i){
-     //INV:
-     if (correcte_quadrant(sudoku,fila,columna,i)){
-       //if (correcte_fila_columna(sudoku,fila,columna,i)){
-       posibles_q.push_back(i);
-       //}
-     }
-     if (correcte_fila_columna(sudoku,fila,columna,i)){
-       posibles_fc.push_back(i);
-     }
-    }
+    posibles = getPossibleValues(sudoku, fila, columna);
    }else if (sudoku[fila][columna] != 0){
       cout << "[]" << endl;
    }
-
-  for (int i = 0; i < int(posibles_fc.size()); ++i){
-    //INV:
-    for (int j = 0; j < int(posibles_q.size()); ++j){
-        //INV:
-        if (posibles_fc[i] == posibles_q[j]){ 
-         val = posibles_q[j];
-         posibles.push_back(val);
-        }
-     }
-  }
   
   int tamany = posibles.size();
   if (tamany == 1){
@@ -320,38 +293,6 @@ void function_c( Matriu& sudoku ){
   }
 }
 
-vector <int> getPossibleValues(Matriu& sudoku, int fila, int columna){
-  vector <int> posible_q;
-  vector <int> posible_fc;
-  vector <int> posible;
-  for (int i = 1; i <= 9; ++i){
-    //INV:
-        if (correcte_quadrant(sudoku,fila,columna,i)){
-          posible_q.push_back(i);
-        }
-        if (correcte_fila_columna(sudoku,fila,columna,i)){
-          posible_fc.push_back(i);
-        }
-  }
-  int val;
-  for (int i = 0; i < int(posible_fc.size()); ++i){
-      //INV:
-      for (int j = 0; j < int(posible_q.size()); ++j){
-        //INV:
-        if (posible_fc[i] == posible_q[j]){ 
-          val = posible_q[j];
-          posible.push_back(val);
-        }
-      }
-  }
-  return posible;
- 
-}
-
-bool unicValor(Matriu& sudoku, int fila, int columna, int valor){
-  return true;
-}
-
 //DESC: Funció que quan la funció main rep el paràmetre 'R', resol de forma automàtica el sudoku, indicant quin valor ha d'anar a cada casella.
 //PRE: Rep la matriu sudoku
 //POST: Retorna quin valor ha d'anar a cada casella així com el sudoku resolt.
@@ -420,11 +361,13 @@ void option(char opcio, Matriu& sudoku){
 
 }
 
-//MAIN
+//---------------------------------
+// MAIN
+//---------------------------------
 int main(){
   Matriu sudoku(9, vector <int>(9));
   
-  //OMPLIM LA MATRIU
+  //OMPLIM LA MATRIU DEL SUDOKU
   omple_sudoku(sudoku); 
   //ESCOLLIM L'OPCIÓ DE JOC DESITJADA
   char c;
