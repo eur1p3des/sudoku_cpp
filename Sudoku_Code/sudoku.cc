@@ -71,6 +71,43 @@ bool correcte_quadrant( Matriu& sudoku, int fila, int columna, int valor ){
 }
 
 
+vector <int> getPossibleValues(Matriu& sudoku, int fila, int columna){
+  vector <int> posible_q;
+  vector <int> posible_fc;
+  vector <int> posible;
+  for (int i = 1; i <= 9; ++i){
+    //INV:
+        if (correcte_quadrant(sudoku,fila,columna,i)){
+          posible_q.push_back(i);
+        }
+        if (correcte_fila_columna(sudoku,fila,columna,i)){
+          posible_fc.push_back(i);
+        }
+  }
+  int val;
+  for (int i = 0; i < int(posible_fc.size()); ++i){
+      //INV:
+      for (int j = 0; j < int(posible_q.size()); ++j){
+        //INV:
+        if (posible_fc[i] == posible_q[j]){ 
+          val = posible_q[j];
+          posible.push_back(val);
+        }
+      }
+  }
+  return posible;
+ 
+}
+
+bool unicValor(Matriu& sudoku, int fila, int columna, int valor){
+  return true;
+}
+
+
+
+
+
+
 //DESC: funció que quan main rep el parametre A retorna els posibles valors per  a una casella determinada.
 //PRE:
 //POST:
@@ -80,9 +117,14 @@ void function_a( Matriu& sudoku ){
   vector <int> posibles_fc; vector <int> posibles_q; vector <int>  posibles;
 
   cin >> fila >> cl;
+   
+  cout << fila << cl << ": ";
+  
+  // Asignem els valors correctes per a la fila i la columna.
   fila -= 1;
   columna = cl - 'A';
   int val;
+  
   if (sudoku[fila][columna] == 0){
     for (int i = 1; i <= 9; ++i){
      //INV:
@@ -111,7 +153,6 @@ void function_a( Matriu& sudoku ){
   }
   
   int tamany = posibles.size();
-
   if (tamany == 1){
     cout << "[" << posibles[0] << "]"<< endl;
   }else if ( tamany > 1 ){
@@ -175,12 +216,12 @@ void function_b( Matriu& sudoku ){
       sudoku[fila][columna] = 0;
       sudoku[fila][columna] = valor;
     }else{
-     cout << "Valor no posible: " << valor << endl;
+      cout << fila+1 << col << ": " << valor << " es un valor no possible" << endl;
     }
  }
  
  else {
-   cout << "Casella no modificable " << fila << " " << columna << " " << sudoku[fila][columna] << endl;
+   cout << fila+1 << char('A'+columna) << ": Casella no modificable " << endl;
  }
 
 
@@ -203,12 +244,12 @@ void function_b( Matriu& sudoku ){
 //9   . 3 . | . 4 . | . 9 5
 // on els '.' corresponen a les caselles buides.
 void function_c( Matriu& sudoku ){
-  cout << "    A B C   D E F   G H I" << endl;
+  cout << "   A B C   D E F   G H I" << endl;
   int cont_f = 0, cont_c = 0;
 
   for (int i = 0; i < 9; ++i){
     //INV:
-    cout << i+1 << "  ";
+    cout << i+1 << " ";
     cont_f++;
     for (int j = 0; j < 9; ++j){
       //INV:
@@ -226,24 +267,86 @@ void function_c( Matriu& sudoku ){
     cout << endl;
 
     if (cont_f == 3 or cont_f == 6){
-      cout << " -------+-------+-------" << endl;
+      cout << "  -------+-------+-------" << endl;
     }
   }
 }
 
+vector <int> getPossibleValues(Matriu& sudoku, int fila, int columna){
+  vector <int> posible_q;
+  vector <int> posible_fc;
+  vector <int> posible;
+  for (int i = 1; i <= 9; ++i){
+    //INV:
+        if (correcte_quadrant(sudoku,fila,columna,i)){
+          posible_q.push_back(i);
+        }
+        if (correcte_fila_columna(sudoku,fila,columna,i)){
+          posible_fc.push_back(i);
+        }
+  }
+  int val;
+  for (int i = 0; i < int(posible_fc.size()); ++i){
+      //INV:
+      for (int j = 0; j < int(posible_q.size()); ++j){
+        //INV:
+        if (posible_fc[i] == posible_q[j]){ 
+          val = posible_q[j];
+          posible.push_back(val);
+        }
+      }
+  }
+  return posible;
+ 
+}
+
+bool unicValor(Matriu& sudoku, int fila, int columna, int valor){
+  return true;
+}
 
 //DESC: Funció que quan la funció main rep el paràmetre 'R', resol de forma automàtica el sudoku, indicant quin valor ha d'anar a cada casella.
 //PRE: Rep la matriu sudoku
 //POST: Retorna quin valor ha d'anar a cada casella així com el sudoku resolt.
 void function_r( Matriu& sudoku){
- Matriu back = sudoku;
+ bool solved = false;
+
+ while (!solved){
+   //INV:
+   bool changed = false;
+
+   for (int fila = 0; fila < 9; ++fila){
+     //INV:
+     for (int columna = 0; columna < 9; ++columna){
+       //INV:
+       if (sudoku[fila][columna] == 0){
+         vector <int> posibles_valors = getPossibleValues(sudoku, fila, columna);
+         if (posibles_valors.size() == 1){
+           sudoku[fila][columna] = posibles_valors[0];
+           cout << "A la casella (" << fila+1 << "," << char('A'+columna) << ") hi ha d'anar un " << posibles_valors[0] << endl;
+           changed = true;
+         }
+         else if(posibles_valors.size() > 1){
+           for (int k = 0; k < int(posibles_valors.size()); ++k){
+              //INV:
+             if (unicValor(sudoku, fila,columna, posibles_valors[k])){
+               sudoku[fila][columna] = posibles_valors[k];
+               cout << "A la casella (" << fila+1 << "," << char('A'+columna) << ") hi ha d'anar un" << posibles_valors[k] << endl;
+               changed = true;
+               break;
+             }
+           }
+         }
+       }
+     }
+   }
+   function_c(sudoku);
+   if (!changed) { solved = true; }
+ }
   
 }
-//MAIN
-int main(){
-  Matriu sudoku(9, vector <int>(9));
-  
-  //OMPLIM LA MATRIU
+
+void omple_sudoku(Matriu& sudoku){
+
   for (int i = 0; i < 9; ++i) {
     //INV:
     for (int j = 0; j < 9; ++j) {
@@ -251,23 +354,37 @@ int main(){
        cin >> sudoku[i][j];
     }
   }
+}
+
+//DESC: Funció que rep un caracter: {A,B,C,R} i executa la funció corresponent
+//PRE: Rep un caràcter i executa la funció corresponent.
+//POST: No retorna res.
+void option(char opcio, Matriu& sudoku){
+    if ( opcio == 'A' ){
+      function_a(sudoku);
+    }else if (opcio == 'B'){
+      function_b(sudoku);
+    }else if ( opcio == 'C' ){
+      function_c(sudoku);
+    }else if ( opcio == 'R' ){
+      function_r(sudoku);
+    }
+
+}
+
+//MAIN
+int main(){
+  Matriu sudoku(9, vector <int>(9));
   
+  //OMPLIM LA MATRIU
+  omple_sudoku(sudoku); 
   //ESCOLLIM L'OPCIÓ DE JOC DESITJADA
   char c;
   cin >> c;
 
   while (c != 'Z'){
     //INV: Mentre el valor del caràcter c sigui diferent de Z es seguirà executant el programa.
-    if ( c == 'A' ){
-      function_a(sudoku);
-    }else if (c == 'B'){
-      function_b(sudoku);
-    }else if ( c == 'C' ){
-      function_c(sudoku);
-    }else if ( c == 'R' ){
-      function_r(sudoku);
-    }
-
+    option(c, sudoku);
     cin >> c;
   }
 }
