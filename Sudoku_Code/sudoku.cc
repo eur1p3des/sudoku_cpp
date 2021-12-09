@@ -153,14 +153,19 @@ bool unicValor(Matriu& sudoku, int fila, int columna, int valor){
 
 
 //DESC: funció que quan main rep el parametre A retorna els posibles valors per  a una casella determinada.
-//PRE:
-//POST:
+//PRE: Rep la matriu sudoku.
+//POST: Retorna els valors posibles per a una casella i una columna determinada
 void function_a( Matriu& sudoku ){
+  //
   int fila, columna;
+  //
   char cl;
+  //
   vector <int> posibles;
+  //
   cin >> fila >> cl;
    
+  //
   cout << fila << cl << ": ";
   
   // Asignem els valors correctes per a la fila i la columna.
@@ -168,24 +173,29 @@ void function_a( Matriu& sudoku ){
   columna = cl - 'A';
 
   if (sudoku[fila][columna] == 0){
+    //
     posibles = getPossibleValues(sudoku, fila, columna);
-   }else if (sudoku[fila][columna] != 0){
-      cout << "[]" << endl;
    }
-  
+  if (sudoku[fila][columna] != 0){
+    //  
+    cout << "[]" << endl;
+   }
+  //
   int tamany = posibles.size();
   if (tamany == 1){
+    //
     cout << "[" << posibles[0] << "]"<< endl;
-  }else if ( tamany > 1 ){
+  }
+  if ( tamany > 1 ){
+    //
     cout << "[";
     for (int i = 0; i < tamany-1; ++i){
       //INV:
       cout << posibles[i] << ", ";
     }
+    //
     cout << posibles[tamany-1] << "]"<< endl;
   }
-  
-
 }
 
 //DESC: Funció que quan es rep el parametre B en la funció main, omple la casella seleccionada (si està buida) i si el valor pot ser insertat.
@@ -195,53 +205,74 @@ void function_a( Matriu& sudoku ){
 // - Valor no posible: si el valor que volem insertar ja es troba al quadrant, a la fila o a la columna.push_back(i);
 // - No retorna res si s'ha pogut insertar el valor.
 void function_b( Matriu& sudoku ){
+ //Variables que indiquen el nº de fila, columna i el valor de la casella.
  int fila, columna, valor;
+ //Caràcter per a indicar la columna. Exemple: A.
  char col; 
+ //S'introdueix per teclat la fila la columna i el valor que volem assignar a la casella sudoku[fila][columna]
  cin >> fila >> col >> valor;
+
+ //Declarem tres vectors diferents: posible_q ( valors posibles al quadrant ); posible_fc (valors posibles per la fila i la columna); posible ( valors que estan a posible_q i posible_fc )
  vector <int> posible_q; vector <int> posible_fc; vector <int> posible;
  
+ //Indiquem que la fila es el valor de la fila - 1. Per exemple, entren la fila 9, com les files van del 0 al 8, aquesta fila estaria fora del rank. Per això si es vol introduir la fila 9, a la matriu aquesta es correspon a la fila -1 = 8.
  fila = fila - 1;
+ //Indiquem que la columna tindra el valor enter de columna - A. Per exemple: Introdueixen la columna A, aquesta en valor numèric seria A - A = 0; si volen la C, seria C-A = 2, etc.
  columna = col - 'A';
 
   for (int i = 1; i <= 9; ++i){
-    //INV:
+    //INV: i correspon al posible valor que hi ha a la casella.
         if (correcte_quadrant(sudoku,fila,columna,i)){
+          // Si la funció correcte_quadrant, que indica si el valor de i es correcte pel cuadrant, retorna true, es guarda el valor i al vector posible_q.
           posible_q.push_back(i);
         }
         if (correcte_fila_columna(sudoku,fila,columna,i)){
+          // Si la funció correcte_fila_columna, que indica si el valor de i es correcte per la fila i la columna, retorna true, es guarda el valor i al vector posible_fc.
           posible_fc.push_back(i);
         }
   }
+  //Declarem la variable val que ens servirà per a "referenciar" els posibles valors que es troben a tos dos vectors (posible_q i posible_fc) i indexar-los al vector posible;
   int val;
+
   for (int i = 0; i < int(posible_fc.size()); ++i){
-      //INV:
+      //INV: i recorre les posicions de posibles_fc.
       for (int j = 0; j < int(posible_q.size()); ++j){
-        //INV:
+        //INV: j recorre les posicions de posibles_q
         if (posible_fc[i] == posible_q[j]){ 
+          //Si el valor en la posició i del vector posible_fc és igual al valor en la posició j del vector posible_q, la variable val passa a valer aquest valor.
           val = posible_q[j];
+          //S'inserta el valor val al vector posible.
           posible.push_back(val);
         }
       }
   }
   
+
   if ( sudoku[fila][columna]  == 0){
-   int cont = 0;
+    // Si el valor que es troba en la posició sudoku[fila][columna] és 0 (la casella està buida), es mira si el valor introduit es pot assignar a la casella.
+    // Declarem la variable cont, que comptarà el número de repetecions del nostre valor dins del vector posible.
+    int cont = 0;
   
    for (int i = 0; i < int(posible.size()); ++i){
-    //INV:
+    //INV: i val la posició en el vector posible, i ha de tenir un valor estrictament inferior al del tamany del vector.
     if (posible[i] == valor){
+      //Si el valor en la posicio i és igual al valor introduit per teclat, s'augmenta el comptador en 1 valor.
       cont++;
     }
    }
    if(cont != 0){
+     //Si la variable cont és diferent de 0, s'asigna el valor que volem introduir a la casella.
       sudoku[fila][columna] = 0;
       sudoku[fila][columna] = valor;
-    }else{
+    }
+   if (cont == 0){
+     //Si el contador és 0, significa que el valor no es posible i per tant no s'assigna a la casella.
       cout << fila+1 << col << ": " << valor << " es un valor no possible" << endl;
     }
  }
  
- else {
+ if (sudoku[fila][columna] != 0) {
+   //Si la casella és diferent de 0, significa que la casella no està buida, i per tant, no és modificable.
    cout << fila+1 << char('A'+columna) << ": Casella no modificable " << endl;
  }
 
