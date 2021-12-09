@@ -265,30 +265,56 @@ void function_b( Matriu& sudoku ){
 //9   . 3 . | . 4 . | . 9 5
 // on els '.' corresponen a les caselles buides.
 void function_c( Matriu& sudoku ){
-  cout << "   A B C   D E F   G H I" << endl;
+  //Creem un arrai de caràcters, per als noms de les columnes
+  char l_columna[] = {'A','B','C','D','E','F','G','H','I'};
+  //Printem l'espai doble per a que quedi ben quadrat amb el sudoku.
+  cout << "  ";
+  
+  for (int i = 0; i < int(sizeof(l_columna)); ++i){
+    //INV: Per a cada valor de i, sent i estrictament menor al tamany de l'array de caracters, es printa el valor que hi ha ha a aquesta posició en l'array
+    //l_columna.
+    if ((i+1 / 3 == 3) or (i+1 / 3 == 6)){
+      //Si al sumar-li 1 a la posició, per a obtindre la columna real, ens dona 3 o 6, printarem un doble espaiat, per a que cuadri amb el sudoku.
+      cout << "  ";
+    }
+    //Printem, mantinguent un espaiat davant, el caràcter que hi ha a la posició i de l'array l_columna.
+    cout << " " << l_columna[i];
+  }
+  //Printem un salt de línia.
+  cout << endl;
+  //Cont_f = contador de files ; cont_c = contador de columnes
   int cont_f = 0, cont_c = 0;
 
   for (int i = 0; i < 9; ++i){
-    //INV:
+    //INV: Per a cada valor de i (fila), mostrarem la fila en la que ens trobem: i+1, i recorrerem cada columna d'aquesta fila.
     cout << i+1 << " ";
+    //El contador de files es incrementat en 1 per a cada fila recorreguda.
     cont_f++;
     for (int j = 0; j < 9; ++j){
-      //INV:
+      //INV: Per a cada valor de j (columna), printarem el valor que hi ha en la posició sudoku[i][j]
       if ( cont_c == 3 or cont_c == 6 ){
+        //Si la variable cont_c (contador de columnes) val 3 o val 6 es printarà el caràcter | acompanyat de 2 espais, per a mostrar que s'ha acabat les columnes del quadrant.
         cout << " |";
       }
       if ( sudoku[i][j] == 0 ){
+        //Quan sudoku[i][j] val 0, es mostrarà un . simbolitzant que aquella casella està buida.
         cout << " .";
-      }else{
+      }
+      if (sudoku[i][j] != 0){
+        //Si la casella no val 0 (no està buida), es mostrarà el valor que té la casella.
         cout << " " << sudoku[i][j];
       }
+      //Augmentem en 1 el valor actual del contador de columnes.
       cont_c++;
     }
+    //Un cop recorregudes totes les columnes de la fila, reinizalitzem el contador de columnes a 0.
     cont_c = 0;
+    //Printem un salt de línia.
     cout << endl;
 
     if (cont_f == 3 or cont_f == 6){
-      cout << "  -------+-------+-------" << endl;
+      //Si el contador de files val 3 o 6, es printarà una línia simbolitzant que s'ha arribat a la última fila del qadrant.
+      cout << "-------+-------+-------" << endl;
     }
   }
 }
@@ -300,27 +326,37 @@ void function_r( Matriu& sudoku){
  bool solved = false;
 
  while (!solved){
-   //INV:
+   //INV: Mentre el boleà solved no sigui true es seguirà executant el bucle.
    bool changed = false;
    cout << endl;
    for (int fila = 0; fila < 9; ++fila){
-     //INV:
+     //INV: Per a cada fila, recorrem totes les columnes.
      for (int columna = 0; columna < 9; ++columna){
-       //INV:
+       //INV:sudoku[fila][columna] conté el valor de actual de la posició fila-columna en la que es troba el bucle. Exemple: fila 1 columna B -> 1B = 0
        if (sudoku[fila][columna] == 0){
+         //Si el valor del sudoku a la fila i columna indicats és igual a 0 s'entra al condicional, si no no s'hi entra.
+         //Declarem un vector anomentat posibles_valors, que contingui els valors posibles per a la fila i la columna indicats.
          vector <int> posibles_valors = getPossibleValues(sudoku, fila, columna);
          if (posibles_valors.size() == 1){
+           //Si el tamany del vector posibles_valors és igual a 1, s'asigna a la posició en la que estem el valor que hi ha a posibles_valors.
            sudoku[fila][columna] = posibles_valors[0];
+           // Es mostra el missatge indicant que a la fila i la columna actuals hi ha d'anar el valor contingut a posibles_valors.
            cout << "A la casella (" << fila+1 << "," << char('A'+columna) << ") hi ha d'anar un " << posibles_valors[0] << endl;
+           //Es canvia el boleà changed a true, indicant que hi ha hagut un canvi en el nostre sudoku.
            changed = true;
          }
-         else if(posibles_valors.size() > 1){
+         if(posibles_valors.size() > 1){
+           //Si el tamany del vector posibles_valors és major que 1, s'entra al condicional.
            for (int k = 0; k < int(posibles_valors.size()); ++k){
-              //INV:
+              //INV: k és la posició actual dins del vector posibles_valors, aquesta k < el tamamny de posibles_valors.
              if (unicValor(sudoku, fila,columna, posibles_valors[k])){
+               //Si la funció unicValor ( que mira que aquest valor només pugui ser assignat en aquesta posició) retorna true, s'asigna el valor a la fila i la columna.
                sudoku[fila][columna] = posibles_valors[k];
+               // Es mostra el missatge indicant que a la fila i la columna actuals hi ha d'anar el valor que es troba en la posició k del vector posibles_valors.
                cout << "A la casella (" << fila+1 << "," << char('A'+columna) << ") hi ha d'anar un " << posibles_valors[k] << endl;
+               // Es canvia el boleà changed a true, indicant que hi ha hagut un canvi en el nostre sudoku.
                changed = true;
+               // Es surt del bucle, que mira per a cada posició del vector posibles_valors, ja que ja s'ha trobat el valor per a aquella casella.
                break;
              }
            }
@@ -328,9 +364,12 @@ void function_r( Matriu& sudoku){
        }
      }
    }
+   //Printem un salt de línia
    cout << endl;
+   //Cridem a la funció function_c per a que printi el sudoku.
    function_c(sudoku);
-   if (!changed) { solved = true; }
+   //Si no hi ha hagut canvis (changed == false) el boleà solved pasa a valdre true, ja que si no s'ha modificat res, vol dir que el sudoku ja estava resolt.
+   if (!changed) { solved = true;}
  }
   
 }
