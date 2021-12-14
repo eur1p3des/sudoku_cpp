@@ -116,23 +116,23 @@ vector <int> getPossibleValues(Matriu& sudoku, int fila, int columna){
 }
 
 
-//DESC:
-//PRE:
-//POST:
+//DESC:Funció que busca si un valor posible per a una casella només pot ser introduit en aquella casella o no, bassant-se en si hi ha alguna altra casella en la que hi pugui anar tant de la fila, com la columna com el quadrant.
+//PRE: Rep la matriu sudoku, el valor de la fila i la columna, i el valor de la casella.
+//POST: Retorna true, si és l'únic valor i false si no.
 bool unicValor(Matriu& sudoku, int fila, int columna, int valor){
-  bool mandatory = true;
-  int iterator = 0;
+  bool obligatori = true;
+  int iterador = 0;
 
-  while (mandatory and iterator < 9){
+  while (obligatori and iterador < 9){
     //INV:
     
-    if (columna != iterator and includes(getPossibleValues(sudoku, fila, iterator), valor)){
-        mandatory = false;
+    if (columna != iterador and includes(getPossibleValues(sudoku, fila, iterador), valor)){
+        obligatori = false;
     }
-    if (fila != iterator and includes(getPossibleValues(sudoku, iterator, columna), valor)){
-        mandatory = false;
+    if (fila != iterador and includes(getPossibleValues(sudoku, iterador, columna), valor)){
+        obligatori = false;
     }
-    ++iterator;
+    ++iterador;
   }
 
   vector <int> submatriu = {
@@ -140,15 +140,15 @@ bool unicValor(Matriu& sudoku, int fila, int columna, int valor){
     columna/3
   };
   
-  for (int i = 0; i < 3 and mandatory; ++i){
-    for (int j = 0; j < 3 and mandatory; ++j){
+  for (int i = 0; i < 3 and obligatori; ++i){
+    for (int j = 0; j < 3 and obligatori; ++j){
       if ( i != fila and j != columna and includes(getPossibleValues(sudoku,i,j), valor)){
-        mandatory = false;
+        obligatori = false;
       }
     }
   }
 
-  return mandatory;
+  return obligatori;
 }
 
 
@@ -156,16 +156,16 @@ bool unicValor(Matriu& sudoku, int fila, int columna, int valor){
 //PRE: Rep la matriu sudoku.
 //POST: Retorna els valors posibles per a una casella i una columna determinada
 void function_a( Matriu& sudoku ){
-  //
+  //Definim les variables que contindran la fila i la columna
   int fila, columna;
-  //
+  //Definim la variable que contindrà el caràcter (A-I) de la columna
   char cl;
-  //
+  //Declarem un vector per a contindre els valors posibles en la posició sudoku[fila][columna]
   vector <int> posibles;
-  //
+  //LLegim per teclat el valor numèric de la fila i el caràcter de la columna.
   cin >> fila >> cl;
    
-  //
+  //Mostrem per pantalla la posició del sudoku que ens interessa.
   cout << fila << cl << ": ";
   
   // Asignem els valors correctes per a la fila i la columna.
@@ -173,27 +173,28 @@ void function_a( Matriu& sudoku ){
   columna = cl - 'A';
 
   if (sudoku[fila][columna] == 0){
-    //
+    //Si la posició està buida, és a dir, hi ha un 0. Es busquen els posibles valors per a la casella.
     posibles = getPossibleValues(sudoku, fila, columna);
    }
   if (sudoku[fila][columna] != 0){
-    //  
+    //Si la cassella no està buida, es retorna una llista buida, és a dir, en aquesta posició no hi pot anar cap valor.  
     cout << "[]" << endl;
    }
-  //
+
+  //Creem un sinònim que sigui tamany igual al tamany del vector posibles.
   int tamany = posibles.size();
   if (tamany == 1){
-    //
+    //Si la variable tamany és igual a 1, només és mostrarà el valor que hi pot anar.
     cout << "[" << posibles[0] << "]"<< endl;
   }
   if ( tamany > 1 ){
-    //
+    //Si el tamany és major a 1, es mostraran els posibles valors separats per una coma.
     cout << "[";
     for (int i = 0; i < tamany-1; ++i){
-      //INV:
+      //INV: i conté la posició dins del vector, sent i estrictament menor al tamany del vector - 1, per a poder aplicar el format i que en l'últim valor no hi hagi una coma. És a dir: El tamany és 3, i els valors del vector són 1,2,3. Al printar-ho, si no apliquéssim aquest filtre ens queda de la següent forma: [1,2,3,]. Al aplicar aquest filtre, el resultat del bucle serà 1,2,   . I així, després podem printar l'últim valor sense necessitat de la coma.
       cout << posibles[i] << ", ";
     }
-    //
+    //Printem l'últim valor del vector possibles.
     cout << posibles[tamany-1] << "]"<< endl;
   }
 }
