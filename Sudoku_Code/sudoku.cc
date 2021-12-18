@@ -73,7 +73,7 @@ bool correcte_quadrant( Matriu& sudoku, int fila, int columna, int valor ){
 //DESC: Funció que retorna si s'ha trobat o no un valor específic
 //PRE:
 //POST:
-bool includes(const vector<int>& valors, int valor){
+bool inclou(const vector<int>& valors, int valor){
   bool trobat = false;
   int iterador = 0;
   while (!trobat and iterador < int(valors.size())){
@@ -84,28 +84,36 @@ bool includes(const vector<int>& valors, int valor){
 }
 
 
-//DESC:
-//PRE:
-//POST
-vector <int> getPossibleValues(Matriu& sudoku, int fila, int columna){
+//DESC: Funció que busca els possibles valors per a una cassella.
+//PRE: Rep la matriu sudoku, la fila i la columna.
+//POST: Retorna un vector amb els posibles valors dins de la casella sudoku[fila][columna]
+vector <int> trobaValors(Matriu& sudoku, int fila, int columna){
+  //Declarem tres vectors:
+  //posible_q guarda els valors posibles dins d'un quadrant.
   vector <int> posible_q;
+  //posible_fc guarda els valors posibles comprobant que aquests no apareixen a la fila ni a la columna de la nostra casella.
   vector <int> posible_fc;
+  //posible guarda els valors que pertanyen a posible_q i a posible_fc;
   vector <int> posible;
   for (int i = 1; i <= 9; ++i){
-    //INV:
+    //INV: i conté un valor a comprobar si és correcte per la casella.
         if (correcte_quadrant(sudoku,fila,columna,i)){
+          //Si la funció correcte_quadrant retorna true, és a dir, el valor i és correcte per la casella en el seu quadrant, es guarda aquest valor 'i' en el vector posible_q.
           posible_q.push_back(i);
         }
         if (correcte_fila_columna(sudoku,fila,columna,i)){
+          //Si la funció correcte_fila_columna retorna true, és a dir, el valor 'i' és correcte per la casella en la fila i columna, aquest valor es guarda en el vectro posible_fc.
           posible_fc.push_back(i);
         }
   }
+  //Declarem un enter de nom val, que ens servidar com a 'alias' per al valor en una posició 'j' del vector posible_q.
   int val;
   for (int i = 0; i < int(posible_fc.size()); ++i){
-      //INV:
+      //INV: i és menor al tamany de posible_fc, i aquest valor 'i' conté la posició dins el vector posible_fc.
       for (int j = 0; j < int(posible_q.size()); ++j){
-        //INV:
+        // INV:j és menor al tamany de posible_q, i aquest valor 'j' conté la posició dins el vector posible_q.
         if (posible_fc[i] == posible_q[j]){ 
+          //Si el valor en la posició 'i' del vector posible_fc és igual al valor en la posició 'j' del vector posible_q, es canvia el valor de 'val' al valor de posible_q en la posició 'j' i s'afegeix el valor 'val' al vector posible.
           val = posible_q[j];
           posible.push_back(val);
         }
@@ -120,18 +128,22 @@ vector <int> getPossibleValues(Matriu& sudoku, int fila, int columna){
 //PRE: Rep la matriu sudoku, el valor de la fila i la columna, i el valor de la casella.
 //POST: Retorna true, si és l'únic valor i false si no.
 bool unicValor(Matriu& sudoku, int fila, int columna, int valor){
+  //Declarem un boolea per a controlar si un valor és o no obligatori en una casella determinada.
   bool obligatori = true;
+  //Declarem la variable iterador que recorrerà cada columna i cada fila.
   int iterador = 0;
 
   while (obligatori and iterador < 9){
-    //INV:
-    
-    if (columna != iterador and includes(getPossibleValues(sudoku, fila, iterador), valor)){
-        obligatori = false;
+    //INV:obligatori es manté true sempre que el valor de la columna o la fila sigui igual al valor de iterador i que el nostre valor sigui únic, és a dir no apareix com a posible en cap altra casella.
+    if (columna != iterador and inclou(trobaValors(sudoku, fila, iterador), valor)){
+      //Si el valor de la columna és diferent al del iterador I la funció inclou retorna true (un dels posibles valors de la casella [fila][iterador] és igual al del valor que volem.), la variable obligatori pasa a ser false.
+      obligatori = false;
     }
-    if (fila != iterador and includes(getPossibleValues(sudoku, iterador, columna), valor)){
-        obligatori = false;
+    if (fila != iterador and inclou(trobaValors(sudoku, iterador, columna), valor)){
+      // Si el valor de la fila és diferent al del iterador I la funció inclou retorna true (un dels posibles valors de la casella [iterador][columna] és igual al del valor que volem.), la variable obligatori pasa a ser false.
+      obligatori = false;
     }
+    //Augmentem el valor de iterador en 1.
     ++iterador;
   }
 
@@ -141,8 +153,11 @@ bool unicValor(Matriu& sudoku, int fila, int columna, int valor){
   };
   
   for (int i = 0; i < 3 and obligatori; ++i){
+    //INV: Mentre obligatori sigui true, i la variable 'i' sigui menor a 3, el bucle es repetirà. 
     for (int j = 0; j < 3 and obligatori; ++j){
-      if ( i != fila and j != columna and includes(getPossibleValues(sudoku,i,j), valor)){
+      //INV:Mentre obligatori sigui true, i la variable 'j' sigui menor a 3, el bucle es repetirà.
+      if ( i != fila and j != columna and inclou(trobaValors(sudoku,i,j), valor)){
+        //Si els valors de i, j són diferents als de la fila i la columna, i la funció inclou retorna true, obligatori pasa a ser fals.
         obligatori = false;
       }
     }
@@ -174,7 +189,7 @@ void function_a( Matriu& sudoku ){
 
   if (sudoku[fila][columna] == 0){
     //Si la posició està buida, és a dir, hi ha un 0. Es busquen els posibles valors per a la casella.
-    posibles = getPossibleValues(sudoku, fila, columna);
+    posibles = trobaValors(sudoku, fila, columna);
    }
   if (sudoku[fila][columna] != 0){
     //Si la cassella no està buida, es retorna una llista buida, és a dir, en aquesta posició no hi pot anar cap valor.  
@@ -368,7 +383,7 @@ void function_r( Matriu& sudoku){
        if (sudoku[fila][columna] == 0){
          //Si el valor del sudoku a la fila i columna indicats és igual a 0 s'entra al condicional, si no no s'hi entra.
          //Declarem un vector anomentat posibles_valors, que contingui els valors posibles per a la fila i la columna indicats.
-         vector <int> posibles_valors = getPossibleValues(sudoku, fila, columna);
+         vector <int> posibles_valors = trobaValors(sudoku, fila, columna);
          if (posibles_valors.size() == 1){
            //Si el tamany del vector posibles_valors és igual a 1, s'asigna a la posició en la que estem el valor que hi ha a posibles_valors.
            sudoku[fila][columna] = posibles_valors[0];
