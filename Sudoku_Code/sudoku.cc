@@ -17,30 +17,36 @@ typedef vector<vector<int>> Matriu;
 //PRE: Rep la matriu sudoku, el valor de la fila, el valor de la columna, i el valor de la casella sudoku[fila][columna]
 //POST: Retorna si el valor de la casella es posible o no per a aquella casella.
 bool correcte_fila_columna( Matriu& sudoku, int fila, int columna, int valor ){
+  //Declarem una matriu que es diu back, la cual conté una còpia de la matriu sudoku. D'aqueta forma, no m'odificarem els valor continguts al nostre sudoku, i per tant, es menys provable que apareguin errors degut a aquestes modificacions en pasos posteriors.
   Matriu back = sudoku;
+  //Omplim en la matriu back, la casella [fila][columna] amb el valor que ens interesa.
   back[fila][columna] = valor;
 
 
-  //Miramos en la columna
+  //Mirem la columna
   for (int col = 0; col < 9; ++col){
-    //INV:
+    //INV:col conté la columna, i recorre cada columna d'una fila. 
     if (col != columna){
+      //Si el valor de col és diferent al de la columna que ha entrat l'usuari, ja que no volem que es miri a la casella seleccionada per l'usuari si el valor hi apareix o no, es seguirà al següent pas.
       if (back[fila][col] == back[fila][columna]){
+        //Si el valor de la casella [fila][col] és igual al valor escollit per l'usuari a la casella [fila][columna], es retorna false, ja que això vol dir que el valor ja apareix a la fila.
         return false;
       }
     }
    }
   
-  //Miramos en la fila
+  //Mirem la columna
   for (int fil = 0; fil < 9; ++fil){
-    //INV:
+    //INV:fil conté la fila dins la matriu back, i recorre cada fila d'una mateixa columna.
     if (fil != fila){
+      //Si el valor de fil és diferent al de la fila que ha entrat l'usuari es seguirà al següent pas, això es fa ja que no ens interesa mirar a la casella seleccionada per l'usuari.
       if (back[fil][columna] == back[fila][columna]){
+        //Si el valor de la casella [fil][columna] és igual al valor que ha entrat l'usuari per a la casella [fila][columna], es retorna false, ja que això vol dir que aquest valor ja apareix a la columna.
         return false;
       }
     }
   }
-
+  //Si quan s'acaben els dos bucles, encara no s'ha retornat false, vol dir que el nostre valor no apareix ni a la fila ni a la columna seleccionades, i per tant, es un posible candidat, això fa que es retorni true.
   return true;
 }
 
@@ -49,37 +55,51 @@ bool correcte_fila_columna( Matriu& sudoku, int fila, int columna, int valor ){
 //PRE: Rep la matriu sudoku, el valor de la fila, el valor de la columna, i el valor de la casella sudoku[fila][columna]
 //POST: Retorna si el valor de la casella es posible o no per a aquella casella.
 bool correcte_quadrant( Matriu& sudoku, int fila, int columna, int valor ){
+  //Declarem una matriu de tipus Matriu (tipus definit al principi del codi.) que contingui una còpia de la matriu sudoku.
   Matriu back = sudoku;
+  //Indiquem que a la casella [fila][columna] de la matriu back, contindrà el número valor
   back[fila][columna] = valor;
   
-  //Miramos el quadrante:
+  // Declarem que la variable f, serà fila/3, i la c serà columna/3. Això ho fem per a trobar el quadrant en el que està.
   int f = fila/3;
   int c = columna/3;
+
+
   for (int i = 0; i < 3; ++i){
-    //INV:
+    //INV: i conté la posició de la fila dins del quadrant.
     for (int j = 0; j < 3; ++j){
-      //INV:
+      //INV: j conté la columna dins del quadrant.
      if ((f*3+i != fila) and (c*3+j != columna)){
+       //Declarem que si f (quadrant) + la fila del quadrant no es igual a la fila i c(quadrant) + la columna del quadrant no és igual a la columna, es miri si el valor de la casella        casella [fila][columna] és igual al valor de la casella en la que ens trobem dins del quadrant. 
       if (back[fila][columna] == back[f*3+i][c*3+j]){
+        //Si els dos valors de les caselles són iguals es retorna false, es a dir, aquest valor ja no pot anar a la posició en la que el volem posar, ja que ja es troba dins del quadrant.
         return false;
       }
      }
     }
   }
+
+  //Si el valor no s'ha trobat en cap posició del quadrant, es retorna true.
   return true;
   
 }
 
 //DESC: Funció que retorna si s'ha trobat o no un valor específic
-//PRE:
-//POST:
+//PRE: Rep el vector que conté els valors posibles i un valor específic.
+//POST: Retorna true, si s'ha trobat el valor i false si no s'ha troba.
 bool inclou(const vector<int>& valors, int valor){
+  //Creem una variable de tipus bool que es diu trobat i l'inicialitzem com a falsa.
   bool trobat = false;
+  //Creem una variable anomenada iterador de tipus int, que mirarà per a cada posició del vector, si el seu valor és igual al que hem especificat anteriorment.
   int iterador = 0;
+
   while (!trobat and iterador < int(valors.size())){
-    if (valors[iterador] == valor){ trobat = true; }
+    //INV: Iterador val ls posició dins del vector. Per a cada iteració se li suma 1 al valor.
+    if (valors[iterador] == valor){ trobat = true; } // Quan el valor de la posició iterador del vector és igual al valor especificat, trobat passa a ser true, i per tant, es surt del bucle.
     ++iterador;
   }
+
+  //Retornem el valor de trobat: true or false.
   return trobat;
 }
 
