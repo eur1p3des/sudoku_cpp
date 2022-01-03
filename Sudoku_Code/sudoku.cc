@@ -1,17 +1,17 @@
-// INCLUDING LIBRARIES
+// Llibreries incloses pel projecte.
 #include <iostream>
 #include <vector>
 #include <string>
 #include <algorithm>
 
-// NAMESPACE
+// Namespaces
 using namespace std;
 
-// TYPEDEF
+// Typedef Matriu, per a simplificar la creació del sudoku.
 typedef vector< vector<int> > Matriu;
 
 //------------------------------------------
-// FUNCTIONS
+// Funcions Utilitzades
 //------------------------------------------
 
 // DESC: funció que retorna els valors "correctes" per a una determinada casella, si aquests no apareixen a la mateixa fila ni a la mateixa columna.
@@ -376,12 +376,12 @@ void function_c(Matriu &sudoku)
 // DESC: Funció que resol el sudoku
 // PRE: Desde la funcio_r s'envia la matriu sudoku
 // POST: Retorna el sudoku resolt.
-Matriu resolSudoku(Matriu &sudoku)
+void resolSudoku(Matriu &sudoku)
 {
-    bool resolt = false, canvi = false;
+    bool resolt = false;
     while (!resolt)
     {
-        canvi = false;
+        bool canvi = false;
         for (int fil = 0; fil < 9; fil++)
         {
             // INV: fil conté la fila actual del sudoku.
@@ -397,19 +397,17 @@ Matriu resolSudoku(Matriu &sudoku)
                         cout << "A la casella (" << fil + 1 << "," << char(col + 'A') << ") hi ha d'anar un " << posibles[0] << endl;
                         canvi = true;
                     }
-                    if ((int)posibles.size() > 1)
+                    if ((int)posibles.size() != 1)
                     {
                         for (int i = 0; i < (int)posibles.size(); ++i)
                         {
-                            // INV: i conté la posició dins del vector posibles.
-                            if (esCorrectePos(sudoku, fil, col, posibles[i]))
+                            // INV: i conté la posició dins del vector dels posibles valors.
+                            if (unicFila(sudoku, fil, col, posibles[i]) or unicColumna(sudoku, fil, col, posibles[i]) or unicQuadrant(sudoku, fil, col, posibles[i]))
                             {
-                                if (unicFila(sudoku, fil, col, posibles[i]) or unicColumna(sudoku, fil, col, posibles[i]) or unicQuadrant(sudoku, fil, col, posibles[i]))
-                                {
-                                    sudoku[fil][col] = posibles[i];
-                                    cout << "A la casella (" << fil + 1 << "," << char(col + 'A') << ") hi ha d'anar un " << posibles[i] << endl;
-                                    canvi = true;
-                                }
+                                sudoku[fil][col] = posibles[i];
+                                cout << "A la casella (" << fil + 1 << "," << char(col + 'A') << ") hi ha d'anar un " << posibles[i] << endl;
+                                canvi = true;
+                                break;
                             }
                         }
                     }
@@ -417,12 +415,12 @@ Matriu resolSudoku(Matriu &sudoku)
             }
         }
         function_c(sudoku);
+        cout << endl;
         if (canvi == false)
         {
             resolt = true;
         }
     }
-    return sudoku;
 }
 
 // DESC: Funció que quan la funció main rep el paràmetre 'R', resol de forma automàtica el sudoku, indicant quin valor ha d'anar a cada casella.
@@ -431,7 +429,6 @@ Matriu resolSudoku(Matriu &sudoku)
 bool function_r(Matriu &sudoku)
 {
     resolSudoku(sudoku);
-    cout << endl;
     if (casellaBuida(sudoku))
     {
         resolSudoku(sudoku);
@@ -476,10 +473,7 @@ void option(char opcio, Matriu &sudoku, Matriu &back)
     }
     else if (opcio == 'R')
     {
-        if (function_r(sudoku) == true)
-        {
-            function_c(sudoku);
-        }
+        function_r(sudoku);
     }
 }
 
