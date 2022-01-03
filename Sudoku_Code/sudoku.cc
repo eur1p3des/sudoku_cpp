@@ -25,19 +25,13 @@ bool correcte_fila_columna(Matriu &sudoku, int fila, int columna, int valor)
     for (int col = 0; col < 9; ++col)
     {
         // INV: col conté la posició de la columna per a cada fila.
-        if (col != columna)
-        {
-            if (back[fila][col] == back[fila][columna]) return false;
-        }
+        if (col != columna)  if (back[fila][col] == back[fila][columna]) return false;
     }
     
     for (int fil = 0; fil < 9; ++fil)
     {
         // INV: fil augmenta en 1 a cada iteració i conté la fila actual dins d'una columna.
-        if (fil != fila)
-        {
-            if (back[fil][columna] == back[fila][columna])  return false;
-        }
+        if (fil != fila) if (back[fil][columna] == back[fila][columna])  return false;
     }
 
     return true;
@@ -172,14 +166,13 @@ bool unicQuadrant(Matriu &sudoku, int fila, int columna, int valor)
     int f = fila / 3, c = columna / 3;
     for (int i = 0; i < 3; ++i)
     {
-        vector<int> posibles;
         // INV: i conté la fila dins del quadrant
         for (int j = 0; j < 3; ++j)
         {
             // INV: j conté la columna dins del quadrant
             if ((f * 3 + i != fila) and (c * 3 + j != columna))
             {
-                posibles = trobaValors(sudoku, f * 3 + i, c * 3 + j);
+                vector <int> posibles = trobaValors(sudoku, f * 3 + i, c * 3 + j);
                 for (int pos = (int)posibles.size() - 1; pos >= 0; --pos)
                 {
                     // INV: pos conté la posició dins del vector posibles.
@@ -200,7 +193,6 @@ void function_a(Matriu &sudoku)
     char cl;
     vector<int> posibles;
     cin >> fila >> cl;
-
     cout << fila << cl << ": ";
 
     fila -= 1;
