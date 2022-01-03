@@ -356,12 +356,10 @@ void resolSudoku(Matriu &sudoku)
 // DESC: Funció que quan la funció main rep el paràmetre 'R', resol de forma automàtica el sudoku, indicant quin valor ha d'anar a cada casella.
 // PRE: Rep la matriu sudoku
 // POST: Retorna true quan el sudoku està resolt.
-bool function_r(Matriu &sudoku)
+void function_r(Matriu &sudoku)
 {
     resolSudoku(sudoku);
     if (casellaBuida(sudoku)) resolSudoku(sudoku);
-    if (!casellaBuida(sudoku)) return true;
-    return false;
 }
 
 // DESC: Funció que permet omplir el sudoku.
