@@ -33,8 +33,7 @@ bool correcte_fila_columna(Matriu &sudoku, int fila, int columna, int valor)
             }
         }
     }
-
-    // Miramos en la fila
+    
     for (int fil = 0; fil < 9; ++fil)
     {
         // INV: fil augmenta en 1 a cada iteració i conté la fila actual dins d'una columna.
@@ -58,8 +57,7 @@ bool correcte_quadrant(Matriu &sudoku, int fila, int columna, int valor)
     Matriu back = sudoku;
     back[fila][columna] = valor;
 
-    int f = fila / 3;
-    int c = columna / 3;
+    int f = fila / 3, c = columna / 3;
     for (int i = 0; i < 3; ++i)
     {
         // INV: i conté la fila dins d'un quadrant.
@@ -68,10 +66,7 @@ bool correcte_quadrant(Matriu &sudoku, int fila, int columna, int valor)
             // INV: j conté la columna dins d'un quadrant.
             if ((f * 3 + i != fila) and (c * 3 + j != columna))
             {
-                if (back[fila][columna] == back[f * 3 + i][c * 3 + j])
-                {
-                    return false;
-                }
+                if (back[fila][columna] == back[f * 3 + i][c * 3 + j]) return false;
             }
         }
     }
@@ -89,10 +84,7 @@ bool casellaBuida(Matriu &sudoku)
         for (int col = 0; col < 9; ++col)
         {
             // INV: col conté la columna actual.
-            if (sudoku[row][col] == 0)
-            {
-                return true;
-            }
+            if (sudoku[row][col] == 0) return true;
         }
     }
     return false;
@@ -103,8 +95,7 @@ bool casellaBuida(Matriu &sudoku)
 // POST: retorna true si es correcte i false si no.
 bool esCorrectePos(Matriu &sudoku, int row, int col, int num)
 {
-    if (correcte_fila_columna(sudoku, row, col, num) and correcte_quadrant(sudoku, row, col, num))
-        return true;
+    if (correcte_fila_columna(sudoku, row, col, num) and correcte_quadrant(sudoku, row, col, num)) return true;
     return false;
 }
 
@@ -117,14 +108,8 @@ vector<int> trobaValors(Matriu &sudoku, int fila, int columna)
     for (int i = 1; i <= 9; ++i)
     {
         // INV: i conté un valor a comprobar si és correcte per la casella.
-        if (correcte_quadrant(sudoku, fila, columna, i))
-        {
-            posible_q.push_back(i);
-        }
-        if (correcte_fila_columna(sudoku, fila, columna, i))
-        {
-            posible_fc.push_back(i);
-        }
+        if (correcte_quadrant(sudoku, fila, columna, i)) posible_q.push_back(i);
+        if (correcte_fila_columna(sudoku, fila, columna, i)) posible_fc.push_back(i);
     }
     int val;
     for (int i = 0; i < int(posible_fc.size()); ++i)
@@ -157,8 +142,7 @@ bool unicFila(Matriu &sudoku, int fila, int columna, int valor)
             for (int i = (int)posibles.size() - 1; i >= 0; --i)
             {
                 // INV: i conté la posició actual dins del vector dels posibles valors de la fila.
-                if (posibles[i] == valor)
-                    return false;
+                if (posibles[i] == valor) return false;
             }
         }
     }
@@ -229,20 +213,11 @@ void function_a(Matriu &sudoku)
     fila -= 1;
     columna = cl - 'A';
 
-    if (sudoku[fila][columna] == 0)
-    {
-        posibles = trobaValors(sudoku, fila, columna);
-    }
-    if (sudoku[fila][columna] != 0)
-    {
-        cout << "[]" << endl;
-    }
+    if (sudoku[fila][columna] == 0) posibles = trobaValors(sudoku, fila, columna);
+    if (sudoku[fila][columna] != 0) cout << "[]" << endl;
 
     int tamany = posibles.size();
-    if (tamany == 1)
-    {
-        cout << "[" << posibles[0] << "]" << endl;
-    }
+    if (tamany == 1)  cout << "[" << posibles[0] << "]" << endl;
     if (tamany > 1)
     {
         cout << "[";
@@ -279,26 +254,17 @@ void function_b(Matriu &sudoku, Matriu &back)
         for (int i = 0; i < int(posible.size()); ++i)
         {
             // INV: i val la posició en el vector posible, i ha de tenir un valor estrictament inferior al del tamany del vector.
-            if (posible[i] == valor)
-            {
-                cont++;
-            }
+            if (posible[i] == valor) cont++;
         }
         if (cont != 0)
         {
             sudoku[fila][columna] = 0;
             sudoku[fila][columna] = valor;
         }
-        if (cont == 0)
-        {
-            cout << fila + 1 << col << ": " << valor << " es un valor no possible" << endl;
-        }
+        if (cont == 0) cout << fila + 1 << col << ": " << valor << " es un valor no possible" << endl;
     }
 
-    if (back[fila][columna] != 0)
-    {
-        cout << fila + 1 << char('A' + columna) << ": Casella no modificable " << endl;
-    }
+    if (back[fila][columna] != 0) cout << fila + 1 << char('A' + columna) << ": Casella no modificable " << endl;
 }
 
 // DESC: Funcio que quan rep el par�metre "c" a la funció main, retorna l'estat actual del sudoku
