@@ -27,10 +27,7 @@ bool correcte_fila_columna(Matriu &sudoku, int fila, int columna, int valor)
         // INV: col conté la posició de la columna per a cada fila.
         if (col != columna)
         {
-            if (back[fila][col] == back[fila][columna])
-            {
-                return false;
-            }
+            if (back[fila][col] == back[fila][columna]) return false;
         }
     }
     
@@ -39,10 +36,7 @@ bool correcte_fila_columna(Matriu &sudoku, int fila, int columna, int valor)
         // INV: fil augmenta en 1 a cada iteració i conté la fila actual dins d'una columna.
         if (fil != fila)
         {
-            if (back[fil][columna] == back[fila][columna])
-            {
-                return false;
-            }
+            if (back[fil][columna] == back[fila][columna])  return false;
         }
     }
 
@@ -175,8 +169,7 @@ bool unicColumna(Matriu &sudoku, int fila, int columna, int valor)
 // POST: Retorna true si es únic i false si no.
 bool unicQuadrant(Matriu &sudoku, int fila, int columna, int valor)
 {
-    int f = fila / 3;
-    int c = columna / 3;
+    int f = fila / 3, c = columna / 3;
     for (int i = 0; i < 3; ++i)
     {
         vector<int> posibles;
@@ -256,11 +249,7 @@ void function_b(Matriu &sudoku, Matriu &back)
             // INV: i val la posició en el vector posible, i ha de tenir un valor estrictament inferior al del tamany del vector.
             if (posible[i] == valor) cont++;
         }
-        if (cont != 0)
-        {
-            sudoku[fila][columna] = 0;
-            sudoku[fila][columna] = valor;
-        }
+        if (cont != 0) sudoku[fila][columna] = valor;
         if (cont == 0) cout << fila + 1 << col << ": " << valor << " es un valor no possible" << endl;
     }
 
@@ -313,7 +302,6 @@ void function_c(Matriu &sudoku)
         }
         cont_c = 0;
         cout << endl;
-
         if (cont_f == 3 or cont_f == 6) cout << "   -------+-------+-----" << endl;
     }
 }
@@ -401,7 +389,6 @@ void option(char opcio, Matriu &sudoku, Matriu &back)
     else if (opcio == 'B') function_b(sudoku, back);
     else if (opcio == 'C') function_c(sudoku);
     else if (opcio == 'R') function_r(sudoku);
-    
 }
 
 //---------------------------------
