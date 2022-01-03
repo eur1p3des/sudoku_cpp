@@ -397,22 +397,11 @@ void omple_sudoku(Matriu &sudoku)
 // POST: No retorna res.
 void option(char opcio, Matriu &sudoku, Matriu &back)
 {
-    if (opcio == 'A')
-    {
-        function_a(sudoku);
-    }
-    else if (opcio == 'B')
-    {
-        function_b(sudoku, back);
-    }
-    else if (opcio == 'C')
-    {
-        function_c(sudoku);
-    }
-    else if (opcio == 'R')
-    {
-        function_r(sudoku);
-    }
+    if (opcio == 'A') function_a(sudoku);
+    else if (opcio == 'B') function_b(sudoku, back);
+    else if (opcio == 'C') function_c(sudoku);
+    else if (opcio == 'R') function_r(sudoku);
+    
 }
 
 //---------------------------------
