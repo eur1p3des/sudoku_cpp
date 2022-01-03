@@ -113,9 +113,7 @@ bool esCorrectePos(Matriu &sudoku, int row, int col, int num)
 // POST: Retorna un vector amb els posibles valors dins de la casella sudoku[fila][columna]
 vector<int> trobaValors(Matriu &sudoku, int fila, int columna)
 {
-    vector<int> posible_q;
-    vector<int> posible_fc;
-    vector<int> posible;
+    vector<int> posible_q, posible_fc, posible;
     for (int i = 1; i <= 9; ++i)
     {
         // INV: i conté un valor a comprobar si és correcte per la casella.
@@ -153,10 +151,9 @@ bool unicFila(Matriu &sudoku, int fila, int columna, int valor)
     for (int col = 0; col < 9; ++col)
     {
         // INV: col conté la columna actual dins de la fila.
-        vector<int> posibles;
         if (col != columna)
         {
-            posibles = trobaValors(sudoku, fila, col);
+            vector <int> posibles = trobaValors(sudoku, fila, col);
             for (int i = (int)posibles.size() - 1; i >= 0; --i)
             {
                 // INV: i conté la posició actual dins del vector dels posibles valors de la fila.
@@ -176,15 +173,13 @@ bool unicColumna(Matriu &sudoku, int fila, int columna, int valor)
     for (int fil = 0; fil < 9; ++fil)
     {
         // INV: fil conté la fila actual dins de la columna
-        vector<int> posibles;
         if (fil != fila)
         {
-            posibles = trobaValors(sudoku, fil, columna);
+            vector<int> posibles = trobaValors(sudoku, fil, columna);
             for (int i = (int)posibles.size() - 1; i >= 0; --i)
             {
                 // INV: i conté la posició actual dins del vector dels posibles valor
-                if (posibles[i] == valor)
-                    return false;
+                if (posibles[i] == valor) return false;
             }
         }
     }
@@ -211,8 +206,7 @@ bool unicQuadrant(Matriu &sudoku, int fila, int columna, int valor)
                 for (int pos = (int)posibles.size() - 1; pos >= 0; --pos)
                 {
                     // INV: pos conté la posició dins del vector posibles.
-                    if (posibles[pos] == valor)
-                        return false;
+                    if (posibles[pos] == valor) return false;
                 }
             }
         }
@@ -332,10 +326,7 @@ void function_c(Matriu &sudoku)
     {
         // INV: Per a cada valor de i, sent i estrictament menor al tamany de l'array de caracters, es printa el valor que hi ha ha a aquesta posició en l'array
         // l_columna.
-        if ((i + 1 / 3 == 3) or (i + 1 / 3 == 6))
-        {
-            cout << "  ";
-        }
+        if ((i + 1 / 3 == 3) or (i + 1 / 3 == 6))  cout << "  ";
         cout << " " << l_columna[i];
     }
     cout << endl;
@@ -349,27 +340,15 @@ void function_c(Matriu &sudoku)
         for (int j = 0; j < 9; ++j)
         {
             // INV: Per a cada valor de j (columna), printarem el valor que hi ha en la posició sudoku[i][j]
-            if (cont_c == 3 or cont_c == 6)
-            {
-                cout << " |";
-            }
-            if (sudoku[i][j] == 0)
-            {
-                cout << " .";
-            }
-            if (sudoku[i][j] != 0)
-            {
-                cout << " " << sudoku[i][j];
-            }
+            if (cont_c == 3 or cont_c == 6) cout << " |";
+            if (sudoku[i][j] == 0) cout << " .";
+            if (sudoku[i][j] != 0) cout << " " << sudoku[i][j];
             cont_c++;
         }
         cont_c = 0;
         cout << endl;
 
-        if (cont_f == 3 or cont_f == 6)
-        {
-            cout << "   -------+-------+-----" << endl;
-        }
+        if (cont_f == 3 or cont_f == 6) cout << "   -------+-------+-----" << endl;
     }
 }
 
@@ -416,10 +395,7 @@ void resolSudoku(Matriu &sudoku)
         }
         function_c(sudoku);
         cout << endl;
-        if (canvi == false)
-        {
-            resolt = true;
-        }
+        if (canvi == false) resolt = true;
     }
 }
 
@@ -429,12 +405,8 @@ void resolSudoku(Matriu &sudoku)
 bool function_r(Matriu &sudoku)
 {
     resolSudoku(sudoku);
-    if (casellaBuida(sudoku))
-    {
-        resolSudoku(sudoku);
-    }
-    if (!casellaBuida(sudoku))
-        return true;
+    if (casellaBuida(sudoku)) resolSudoku(sudoku);
+    if (!casellaBuida(sudoku)) return true;
     return false;
 }
 
