@@ -52,10 +52,8 @@ bool correcte_quadrant(Matriu &sudoku, int fila, int columna, int valor)
         for (int j = 0; j < 3; ++j)
         {
             // INV: j conté la columna dins d'un quadrant.
-            if ((f * 3 + i != fila) and (c * 3 + j != columna))
-            {
-                if (back[fila][columna] == back[f * 3 + i][c * 3 + j]) return false;
-            }
+            if ((f * 3 + i != fila) and (c * 3 + j != columna)) if (back[fila][columna] == back[f * 3 + i][c * 3 + j]) return false;
+            
         }
     }
     return true;
@@ -92,26 +90,10 @@ bool esCorrectePos(Matriu &sudoku, int row, int col, int num)
 // POST: Retorna un vector amb els posibles valors dins de la casella sudoku[fila][columna]
 vector<int> trobaValors(Matriu &sudoku, int fila, int columna)
 {
-    vector<int> posible_q, posible_fc, posible;
-    for (int i = 1; i <= 9; ++i)
-    {
-        // INV: i conté un valor a comprobar si és correcte per la casella.
-        if (correcte_quadrant(sudoku, fila, columna, i)) posible_q.push_back(i);
-        if (correcte_fila_columna(sudoku, fila, columna, i)) posible_fc.push_back(i);
-    }
-    int val;
-    for (int i = 0; i < int(posible_fc.size()); ++i)
-    {
-        // INV: i és menor al tamany de posible_fc, i aquest valor 'i' conté la posició dins el vector posible_fc.
-        for (int j = 0; j < int(posible_q.size()); ++j)
-        {
-            // INV:j és menor al tamany de posible_q, i aquest valor 'j' conté la posició dins el vector posible_q.
-            if (posible_fc[i] == posible_q[j])
-            {
-                val = posible_q[j];
-                posible.push_back(val);
-            }
-        }
+    vector<int> posible;
+    for (int i = 1; i <= 9; ++i){
+        //INV: i conté un posible valor del 1 al 9, el cual es comproba que sigui correcte.
+        if (esCorrectePos(sudoku,fila,columna,i)) posible.push_back(i);
     }
     return posible;
 }
@@ -248,7 +230,7 @@ void function_b(Matriu &sudoku, Matriu &back)
     if (back[fila][columna] != 0) cout << fila + 1 << char('A' + columna) << ": Casella no modificable " << endl;
 }
 
-// DESC: Funcio que quan rep el par�metre "c" a la funció main, retorna l'estat actual del sudoku
+// DESC: Funcio que quan rep el paràmetre "c" a la funció main, retorna l'estat actual del sudoku
 // PRE: matriu sudoku
 // POST: retorna l'estat actual del sudoku en el següent format:
 //     A B C   D E F   G H I
