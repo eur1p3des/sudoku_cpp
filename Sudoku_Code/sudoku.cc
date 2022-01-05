@@ -17,7 +17,7 @@ typedef vector< vector<int> > Matriu;
 // DESC: funció que retorna els valors "correctes" per a una determinada casella, si aquests no apareixen a la mateixa fila ni a la mateixa columna.
 // PRE: Rep la matriu sudoku, el valor de la fila, el valor de la columna, i el valor de la casella sudoku[fila][columna]
 // POST: Retorna si el valor de la casella es posible o no per a aquella casella.
-bool correcte_fila_columna(Matriu &sudoku, int fila, int columna, int valor)
+bool correcte_fila_columna(Matriu sudoku, int fila, int columna, int valor)
 {
     Matriu back = sudoku;
     back[fila][columna] = valor;
@@ -27,7 +27,7 @@ bool correcte_fila_columna(Matriu &sudoku, int fila, int columna, int valor)
         // INV: col conté la posició de la columna per a cada fila.
         if (col != columna)  if (back[fila][col] == back[fila][columna]) return false;
     }
-    
+
     for (int fil = 0; fil < 9; ++fil)
     {
         // INV: fil augmenta en 1 a cada iteració i conté la fila actual dins d'una columna.
@@ -40,7 +40,7 @@ bool correcte_fila_columna(Matriu &sudoku, int fila, int columna, int valor)
 // DESC: funció que retorna els valors "correctes" per a una determinada casella, si aquests no apareixen al mateix quadrant.
 // PRE: Rep la matriu sudoku, el valor de la fila, el valor de la columna, i el valor de la casella sudoku[fila][columna]
 // POST: Retorna si el valor de la casella es posible o no per a aquella casella.
-bool correcte_quadrant(Matriu &sudoku, int fila, int columna, int valor)
+bool correcte_quadrant(Matriu sudoku, int fila, int columna, int valor)
 {
     Matriu back = sudoku;
     back[fila][columna] = valor;
@@ -53,7 +53,7 @@ bool correcte_quadrant(Matriu &sudoku, int fila, int columna, int valor)
         {
             // INV: j conté la columna dins d'un quadrant.
             if ((f * 3 + i != fila) and (c * 3 + j != columna)) if (back[fila][columna] == back[f * 3 + i][c * 3 + j]) return false;
-            
+
         }
     }
     return true;
@@ -62,7 +62,7 @@ bool correcte_quadrant(Matriu &sudoku, int fila, int columna, int valor)
 // DESC: Funcio que busca caselles buides dins del sudoku.
 // PRE: Rep el sudoku, fila i columna, ambdós sense inicialitzar.
 // POST: retorna true si hi ha alguna casella buida i false, si no n'hi ha cap.
-bool casellaBuida(Matriu &sudoku)
+bool casellaBuida(Matriu sudoku)
 {
     for (int row = 0; row < (int)sudoku.size(); ++row)
     {
@@ -79,7 +79,7 @@ bool casellaBuida(Matriu &sudoku)
 // DESC: Funcio que retorna si un valor es correcte per a una posicio.
 // PRE: Rep el sudoku la fila la columna i el valor.
 // POST: retorna true si es correcte i false si no.
-bool esCorrectePos(Matriu &sudoku, int row, int col, int num)
+bool esCorrectePos(Matriu sudoku, int row, int col, int num)
 {
     if (correcte_fila_columna(sudoku, row, col, num) and correcte_quadrant(sudoku, row, col, num)) return true;
     return false;
@@ -88,31 +88,33 @@ bool esCorrectePos(Matriu &sudoku, int row, int col, int num)
 // DESC: Funció que busca els possibles valors per a una cassella.
 // PRE: Rep la matriu sudoku, la fila i la columna.
 // POST: Retorna un vector amb els posibles valors dins de la casella sudoku[fila][columna]
-vector<int> trobaValors(Matriu &sudoku, int fila, int columna)
+vector<int> trobaValors(Matriu sudoku, int fila, int columna)
 {
     vector<int> posible;
-    for (int i = 1; i <= 9; ++i){
-        //INV: i conté un posible valor del 1 al 9, el cual es comproba que sigui correcte.
-        if (esCorrectePos(sudoku,fila,columna,i)) posible.push_back(i);
-    }
+      for (int i = 1; i <= 9; ++i){
+          //INV: i conté un posible valor del 1 al 9, el cual es comproba que sigui correcte.
+          if (esCorrectePos(sudoku,fila,columna,i)) posible.push_back(i);
+      }
     return posible;
 }
 
 // DESC: Funció que mira si un valor només es posbile en una casella d'una fila determinada.
 // PRE: Rep la matriu sudoku i les dades de la casella.
 // POST: Retorna true si es únic i false si no.
-bool unicFila(Matriu &sudoku, int fila, int columna, int valor)
+bool unicFila(Matriu sudoku, int fila, int columna, int valor)
 {
     for (int col = 0; col < 9; ++col)
     {
         // INV: col conté la columna actual dins de la fila.
         if (col != columna)
         {
-            vector <int> posibles = trobaValors(sudoku, fila, col);
-            for (int i = (int)posibles.size() - 1; i >= 0; --i)
-            {
-                // INV: i conté la posició actual dins del vector dels posibles valors de la fila.
-                if (posibles[i] == valor) return false;
+            if(sudoku[fila][col] == 0){
+              vector <int> posibles = trobaValors(sudoku, fila, col);
+              for (int i = posibles.size()-1; i >= 0; --i)
+              {
+                  // INV: i conté la posició actual dins del vector dels posibles valors de la fila.
+                  if (posibles[i] == valor) return false;
+              }
             }
         }
     }
@@ -122,45 +124,21 @@ bool unicFila(Matriu &sudoku, int fila, int columna, int valor)
 // DESC: Funció que mira si un valor només es posbile en una casella d'una columna determinada.
 // PRE: Rep la matriu sudoku i les dades de la casella.
 // POST: Retorna true si es únic i false si no.
-bool unicColumna(Matriu &sudoku, int fila, int columna, int valor)
+bool unicColumna(Matriu sudoku, int fila, int columna, int valor)
 {
     for (int fil = 0; fil < 9; ++fil)
     {
         // INV: fil conté la fila actual dins de la columna
         if (fil != fila)
         {
+          if (sudoku[fil][columna] == 0){
             vector<int> posibles = trobaValors(sudoku, fil, columna);
-            for (int i = (int)posibles.size() - 1; i >= 0; --i)
+            for (int i = posibles.size()-1; i >= 0; i--)
             {
                 // INV: i conté la posició actual dins del vector dels posibles valor
                 if (posibles[i] == valor) return false;
             }
-        }
-    }
-    return true;
-}
-
-// DESC: Funció que mira si un valor només es posbile en una casella d'un quadrant determinat.
-// PRE: Rep la matriu sudoku i les dades de la casella.
-// POST: Retorna true si es únic i false si no.
-bool unicQuadrant(Matriu &sudoku, int fila, int columna, int valor)
-{
-    int f = fila / 3, c = columna / 3;
-    for (int i = 0; i < 3; ++i)
-    {
-        // INV: i conté la fila dins del quadrant
-        for (int j = 0; j < 3; ++j)
-        {
-            // INV: j conté la columna dins del quadrant
-            if ((f * 3 + i != fila) and (c * 3 + j != columna))
-            {
-                vector <int> posibles = trobaValors(sudoku, f * 3 + i, c * 3 + j);
-                for (int pos = (int)posibles.size() - 1; pos >= 0; --pos)
-                {
-                    // INV: pos conté la posició dins del vector posibles.
-                    if (posibles[pos] == valor) return false;
-                }
-            }
+          }
         }
     }
     return true;
@@ -280,6 +258,7 @@ void function_c(Matriu &sudoku)
     }
 }
 
+
 // DESC: Funció que resol el sudoku
 // PRE: Desde la funcio_r s'envia la matriu sudoku
 // POST: Retorna el sudoku resolt.
@@ -306,16 +285,17 @@ void resolSudoku(Matriu &sudoku)
                     }
                     if ((int)posibles.size() != 1)
                     {
-                        for (int i = 0; i < (int)posibles.size(); ++i)
+                        for (int i = (int)posibles.size() - 1; i >= 0; i--)
                         {
                             // INV: i conté la posició dins del vector dels posibles valors.
-                            if (unicFila(sudoku, fil, col, posibles[i]) or unicColumna(sudoku, fil, col, posibles[i]) or unicQuadrant(sudoku, fil, col, posibles[i]))
-                            {
-                                sudoku[fil][col] = posibles[i];
-                                cout << "A la casella (" << fil + 1 << "," << char(col + 'A') << ") hi ha d'anar un " << posibles[i] << endl;
-                                canvi = true;
-                                break;
-                            }
+                              if (unicFila(sudoku, fil, col, posibles[i]) or unicColumna(sudoku, fil, col, posibles[i]))
+                              {
+                                if(sudoku[fil][col] == 0){
+                                  sudoku[fil][col] = posibles[i];
+                                  cout << "A la casella (" << fil + 1 << "," << char(col + 'A') << ") hi ha d'anar un " << posibles[i] << endl;
+                                  canvi = true;
+                                }
+                              }
                         }
                     }
                 }
@@ -326,6 +306,7 @@ void resolSudoku(Matriu &sudoku)
         if (canvi == false) resolt = true;
     }
 }
+
 
 // DESC: Funció que quan la funció main rep el paràmetre 'R', resol de forma automàtica el sudoku, indicant quin valor ha d'anar a cada casella.
 // PRE: Rep la matriu sudoku
@@ -378,7 +359,7 @@ int main()
 
     while (c != 'Z')
     {
-        // INV: Mentre el valor del caràcter c sigui diferent de Z es seguirà executant el programa.
+        // INV: Mentre el valor del caràcter c sigui diferent de Z se seguirà executant el programa.
         option(c, sudoku, back);
         cin >> c;
     }
